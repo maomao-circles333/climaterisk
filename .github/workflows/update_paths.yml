@@ -1,0 +1,36 @@
+name: Update paths
+
+on:
+  push:
+    paths:
+      - '**/es-419/*.md'
+      - '*-es-419.md'
+    branches:
+      - main
+  workflow_dispatch:
+    
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rename:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Rename locale to be more human-friendly
+          run: |
+            find . -depth -type d -name 'es-419' -exec bash -c 'rsync -zavh {}/* $(dirname {})/espanol' \;
+            find . -depth -name '*-es-419.md' -execdir bash -c 'mv -i "$1" "${1//es-419/es}"' bash {} \;
+            find . -type d -name es-419 -prune -exec rm -rf {} \;
+
+        - name: Commit changes
+          run: |
+            git config user.email "action@github.com"
+            git config user.name "GitHub Action"
+            git commit -a -m 'Rename locale to be more human-friendly' || echo "No changes to commit"
+
+        - name: Create Pull Request
+          uses: peter-evans/create-pull-request@v7

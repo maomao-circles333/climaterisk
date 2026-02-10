@@ -1,0 +1,4 @@
+mystmd
+matplotlib
+numpy
+ghp-import
