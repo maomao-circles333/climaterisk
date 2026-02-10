@@ -15,8 +15,6 @@ venv.bak/
 .netrc
 
 # Jupyter Notebook
-**/.ipynb_checkpoints
-**/*.ipynb
 
 # MyST build outputs
 **/_build
